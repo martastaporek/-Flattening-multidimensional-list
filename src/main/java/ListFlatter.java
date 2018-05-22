@@ -17,8 +17,10 @@ public class ListFlatter {
                 Iterable castedElem = (Iterable) elem;
                 flatenList(castedElem);
             } else if (elem instanceof Object []) {
-                Object [] castedElem = (Object[]) elem;
+                Object[] castedElem = (Object[]) elem;
                 flatenList(castedElem);
+            }else if(elem.getClass().getName().equals("[I")){
+                throw new IllegalArgumentException("Tables with privitives are not allowed");
             } else {
                 this.flatted.add(elem);
             }
@@ -35,8 +37,10 @@ public class ListFlatter {
                 Iterable castedElem = (Iterable) elem;
                 flatenList(castedElem);
             } else if (elem instanceof Object []) {
-            Object [] castedElem = (Object[]) elem;
-            flatenList(castedElem);
+                Object[] castedElem = (Object[]) elem;
+                flatenList(castedElem);
+            } else if(elem.getClass().getName().equals("[I")){
+                throw new IllegalArgumentException("Tables with privitives are not allowed");
         } else {
             this.flatted.add(elem);
         }
