@@ -1,65 +1,65 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ListFlatter {
 
-    List flatted = new ArrayList();
+    List flatArray = new ArrayList();
 
 
-    public List getFlatted() {
-        return flatted;
+    public List getFlatArray() {
+        return flatArray;
     }
 
-    public void flaten(List nestedList) {
+    public void flatten(List nestedList) {
 
         for (Object elem : nestedList) {
             if (elem instanceof Iterable) {
                 Iterable castedElem = (Iterable) elem;
-                flatenList(castedElem);
+                flatten(castedElem);
             } else if (elem instanceof Object []) {
                 Object[] castedElem = (Object[]) elem;
-                flatenList(castedElem);
-            }else if(elem.getClass().getName().equals("[I")){
-                throw new IllegalArgumentException("Tables with privitives are not allowed");
+                flattenTable(castedElem);
+            }else if(elem.getClass().getName().equals("[I") || elem instanceof Map){
+                this.flatArray.add(new UnknownObject());
             } else {
-                this.flatted.add(elem);
+                this.flatArray.add(elem);
             }
         }
     }
 
 
-
-
-    private void flatenList(Iterable nestedElem) {
+    private void flatten(Iterable nestedElem) {
 
         for (Object elem : nestedElem) {
             if (elem instanceof Iterable) {
                 Iterable castedElem = (Iterable) elem;
-                flatenList(castedElem);
-            } else if (elem instanceof Object []) {
+                flatten(castedElem);
+            } else if (elem instanceof Object[]) {
                 Object[] castedElem = (Object[]) elem;
-                flatenList(castedElem);
-            } else if(elem.getClass().getName().equals("[I")){
-                throw new IllegalArgumentException("Tables with privitives are not allowed");
-        } else {
-            this.flatted.add(elem);
-        }
-        }
+                flattenTable(castedElem);
+            } else if (elem.getClass().getName().equals("[I") || elem instanceof Map) {
+                this.flatArray.add(new UnknownObject());
+            } else {
+                this.flatArray.add(elem);
+            }
 
         }
+    }
 
-    private void flatenList(Object[] nestedElem) {
+    private void flattenTable(Object[] nestedElem) {
         for (Object elem : nestedElem) {
             if (elem instanceof Iterable) {
                 Iterable castedElem = (Iterable) elem;
-                flatenList(castedElem);
-            } else if (elem instanceof Object []) {
-            Object [] castedElem = (Object[]) elem;
-            flatenList(castedElem);
-        } else {
-            this.flatted.add(elem);
-        }
-
+                flatten(castedElem);
+                } else if (elem instanceof Object []) {
+                    Object [] castedElem = (Object[]) elem;
+                    flattenTable(castedElem);
+                } else if(elem.getClass().getName().equals("[I") || elem instanceof Map){
+                    this.flatArray.add(new UnknownObject());
+                } else {
+                    this.flatArray.add(elem);
             }
         }
     }
+}
